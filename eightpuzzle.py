@@ -133,7 +133,7 @@ class EightPuzzleState:
             newrow = row
             newcol = col + 1
         else:
-            raise "Illegal Move"
+            raise Exception("Illegal Move")
 
         # Create a copy of the current eightPuzzle
         newPuzzle = EightPuzzleState([0, 0, 0, 0, 0, 0, 0, 0, 0])
@@ -269,13 +269,13 @@ if __name__ == '__main__':
 
     problem = EightPuzzleSearchProblem(puzzle)
     path = search.breadthFirstSearch(problem)
-    print('BFS found a path of %d moves: %s' % (len(path), str(path)))
+    print(('BFS found a path of %d moves: %s' % (len(path), str(path))))
     curr = puzzle
     i = 1
     for a in path:
         curr = curr.result(a)
-        print('After %d move%s: %s' % (i, ("", "s")[i>1], a))
+        print(('After %d move%s: %s' % (i, ("", "s")[i>1], a)))
         print(curr)
 
-        raw_input("Press return for the next state...")   # wait for key stroke
+        input("Press return for the next state...")   # wait for key stroke
         i += 1
