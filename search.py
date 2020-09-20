@@ -87,17 +87,89 @@ def depthFirstSearch(problem):
     print "Start's successors:", problem.getSuccessors(problem.getStartState())
     """
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    visited = set()
+    stateStack = util.Stack()
+    stateStack.push((problem.getStartState(), [], 0))
+    returnActions = None
+
+    while not stateStack.isEmpty():
+        cState, cActions, cCost = stateStack.pop()
+
+        if (problem.isGoalState(cState)):
+            return cActions
+
+        if (cState in visited):
+            continue
+
+        visited.add(cState)
+        for successor in problem.getSuccessors(cState):
+            sState, nextAction, nextCost = successor
+
+
+            sActions = cActions + [nextAction]
+            sCost = cCost + nextCost
+
+            stateStack.push((sState, sActions, sCost))
+
+    return []
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    visited = set()
+    stateStack = util.Queue()
+    stateStack.push((problem.getStartState(), [], 0))
+    returnActions = None
+
+    while not stateStack.isEmpty():
+        cState, cActions, cCost = stateStack.pop()
+
+        if (problem.isGoalState(cState)):
+            return cActions
+
+        if (cState in visited):
+            continue
+        
+        visited.add(cState)
+        for successor in problem.getSuccessors(cState):
+            sState, nextAction, nextCost = successor
+
+
+            sActions = cActions + [nextAction]
+            sCost = cCost + nextCost
+
+            stateStack.push((sState, sActions, sCost))
+
+    return []
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    visited = set()
+    statePQ = util.PriorityQueue()
+    statePQ.push((problem.getStartState(), [], 0), 0)
+    returnActions = None
+
+    while not statePQ.isEmpty():
+        cState, cActions, cCost = statePQ.pop()
+
+        if (problem.isGoalState(cState)):
+            return cActions
+
+        if (cState in visited):
+            continue
+        
+        visited.add(cState)
+        for successor in problem.getSuccessors(cState):
+            sState, nextAction, nextCost = successor
+
+
+            sActions = cActions + [nextAction]
+            sCost = cCost + nextCost
+
+            statePQ.push((sState, sActions, sCost), sCost)
+
+    return []
 
 def nullHeuristic(state, problem=None):
     """
