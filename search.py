@@ -92,7 +92,6 @@ def depthFirstSearch(problem):
     visited = set()
     stateStack = util.Stack()
     stateStack.push((problem.getStartState(), [], 0))
-    returnActions = None
 
     while not stateStack.isEmpty():
         cState, cActions, cCost = stateStack.pop()
@@ -121,7 +120,6 @@ def breadthFirstSearch(problem):
     visited = set()
     stateStack = util.Queue()
     stateStack.push((problem.getStartState(), [], 0))
-    returnActions = None
 
     while not stateStack.isEmpty():
         cState, cActions, cCost = stateStack.pop()
@@ -150,7 +148,6 @@ def uniformCostSearch(problem):
     visited = set()
     statePQ = util.PriorityQueue()
     statePQ.push((problem.getStartState(), [], 0), 0)
-    returnActions = None
 
     while not statePQ.isEmpty():
         cState, cActions, cCost = statePQ.pop()
@@ -189,7 +186,6 @@ def aStarSearch(problem, heuristic=nullHeuristic):
     heuristicValue = heuristic(problem.getStartState(), problem)
     statePQ.push((problem.getStartState(), [], 0),
                  heuristicValue)
-    returnActions = None
 
     while not statePQ.isEmpty():
         cState, cActions, cCost = statePQ.pop()
