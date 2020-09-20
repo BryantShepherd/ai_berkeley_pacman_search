@@ -4,7 +4,7 @@
 # educational purposes provided that (1) you do not distribute or publish
 # solutions, (2) you retain this notice, and (3) you provide clear
 # attribution to UC Berkeley, including a link to http://ai.berkeley.edu.
-# 
+#
 # Attribution Information: The Pacman AI projects were developed at UC Berkeley.
 # The core projects and autograders were primarily created by John DeNero
 # (denero@cs.berkeley.edu) and Dan Klein (klein@cs.berkeley.edu).
@@ -18,6 +18,7 @@ Pacman agents (in searchAgents.py).
 """
 
 import util
+
 
 class SearchProblem:
     """
@@ -70,7 +71,8 @@ def tinyMazeSearch(problem):
     from game import Directions
     s = Directions.SOUTH
     w = Directions.WEST
-    return  [s, s, w, s, w, w, s, w]
+    return [s, s, w, s, w, w, s, w]
+
 
 def depthFirstSearch(problem):
     """
@@ -105,13 +107,13 @@ def depthFirstSearch(problem):
         for successor in problem.getSuccessors(cState):
             sState, nextAction, nextCost = successor
 
-
             sActions = cActions + [nextAction]
             sCost = cCost + nextCost
 
             stateStack.push((sState, sActions, sCost))
 
     return []
+
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
@@ -129,11 +131,10 @@ def breadthFirstSearch(problem):
 
         if (cState in visited):
             continue
-        
+
         visited.add(cState)
         for successor in problem.getSuccessors(cState):
             sState, nextAction, nextCost = successor
-
 
             sActions = cActions + [nextAction]
             sCost = cCost + nextCost
@@ -141,6 +142,7 @@ def breadthFirstSearch(problem):
             stateStack.push((sState, sActions, sCost))
 
     return []
+
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
@@ -158,11 +160,10 @@ def uniformCostSearch(problem):
 
         if (cState in visited):
             continue
-        
+
         visited.add(cState)
         for successor in problem.getSuccessors(cState):
             sState, nextAction, nextCost = successor
-
 
             sActions = cActions + [nextAction]
             sCost = cCost + nextCost
@@ -171,6 +172,7 @@ def uniformCostSearch(problem):
 
     return []
 
+
 def nullHeuristic(state, problem=None):
     """
     A heuristic function estimates the cost from the current state to the nearest
@@ -178,10 +180,38 @@ def nullHeuristic(state, problem=None):
     """
     return 0
 
+
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    visited = set()
+    statePQ = util.PriorityQueue()
+    heuristicValue = heuristic(problem.getStartState(), problem)
+    statePQ.push((problem.getStartState(), [], 0),
+                 heuristicValue)
+    returnActions = None
+
+    while not statePQ.isEmpty():
+        cState, cActions, cCost = statePQ.pop()
+
+        if (problem.isGoalState(cState)):
+            return cActions
+
+        if (cState in visited):
+            continue
+
+        visited.add(cState)
+        for successor in problem.getSuccessors(cState):
+            sState, nextAction, nextCost = successor
+
+            sActions = cActions + [nextAction]
+            sCost = cCost + nextCost
+
+            heuristicValue = heuristic(sState, problem) + sCost
+            statePQ.push((sState, sActions, sCost),
+                         heuristicValue)
+
+    return []
 
 
 # Abbreviations
