@@ -1,5 +1,9 @@
 # Pacman Search
 
+**Điểm cuối cùng**: 24/25
+
+![autograder](https://i.imgur.com/l91Cj7V.gif)
+
 **Lưu ý**: Project Pacman Search ban đầu được viết bằng Python 2, tuy nhiên project đã được chuyển về Python 3 để có thể sử dụng cú pháp và chức năng mới nhất do Python cung cấp.
 
 ```sh
@@ -110,3 +114,7 @@ for i in range(foodGrid.width):
             maxDist = util.manhattanDistance(position, (i, j))
 return maxDist
 ```
+
+## Câu hỏi 8: Suboptimal Search
+
+Sử dụng hàm search.uniformCostSearch() của câu 3 để tìm.
