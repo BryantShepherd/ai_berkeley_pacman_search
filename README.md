@@ -74,7 +74,7 @@ Thuật toán BFS, UCS và A\* có cấu trúc tương tự như trên. Thay vì
 
 ## Câu hỏi 6: Corners Problem: Heuristic
 
-Ta ước lượng chi phí để đạt được trạng thái đích là đi đến được góc xa nhất của bản đồ.
+Ta ước lượng chi phí để đạt được trạng thái đích là đi đến được góc xa nhất của bản đồ. Sử dụng hàm này, agent sẽ có xu hướng expand các node ra 4 góc bản đồ, giúp tìm kiếm đường đi tối ưu nhanh hơn.
 
 Hàm có tính admissible do để đi qua được 4 góc thì agent buộc phải đi qua góc ở xa nhất. Hàm cũng đảm bảo tính consistency do biểu thức h(n) \<= g(n, n') + h(n') luôn thỏa mãn.
 
@@ -117,4 +117,4 @@ return maxDist
 
 ## Câu hỏi 8: Suboptimal Search
 
-Sử dụng hàm search.uniformCostSearch() của câu 3 để tìm.
+Sử dụng hàm `search.uniformCostSearch()` của câu 3 để tìm.
