@@ -56,5 +56,57 @@ while not stateStack.isEmpty():
 return []
 ```
 
-Thuật toán BFS, UCS và A\* có cấu trúc tương tự như trên. Thay vì cấu trúc dữ liệu Stack, BFS sử dụng Queue, UCS và A* sử dụng PriorityQueue với priority lần lượt là `cost` và `manhattanDistance + cost`.
+Thuật toán BFS, UCS và A\* có cấu trúc tương tự như trên. Thay vì cấu trúc dữ liệu Stack, BFS sử dụng Queue, UCS và A\* sử dụng PriorityQueue với priority lần lượt là `cost` và `manhattanDistance + cost`.
 
+## Câu hỏi 5
+
+- State: vị trí của pacman, trạng thái của 4 góc bản đồ.
+
+- Action: NSEW
+
+- Successor: Update vị trí của pacman và trạng thái của 4 góc bản đồ (nếu cần)
+
+- Goal test: Trạng thái của 4 góc bản đồ là True (đã đi qua hết).
+
+## Câu hỏi 6: Corners Problem: Heuristic
+
+Ta ước lượng chi phí để đạt được trạng thái đích là đi đến được góc xa nhất của bản đồ.
+
+Hàm có tính admissible do để đi qua được 4 góc thì agent buộc phải đi qua góc ở xa nhất. Hàm cũng đảm bảo tính consistency do biểu thức h(n) \<= g(n, n') + h(n') luôn thỏa mãn.
+
+```py
+corners = problem.corners
+walls = problem.walls
+
+currentPosition, currentCornersBoolean = state
+
+maxDist = float('-inf')
+
+if currentCornersBoolean == (True, True, True, True):
+    return 0
+
+for i in range(len(currentCornersBoolean)):
+    dist = util.manhattanDistance(currentPosition, corners[i])
+    if (not currentCornersBoolean[i] and dist > maxDist):
+        maxDist = dist
+
+return maxDist
+```
+
+## Câu hỏi 7: Eating All The Dots
+
+Tương tự như câu hỏi 6, để ăn tất cả hạt trên bản đồ, agent cần phải ăn được hạt ở xa nhất.
+
+```py
+position, foodGrid = state
+maxDist = float('-inf')
+count = foodGrid.count()
+if count == 0:
+    return 0
+
+for i in range(foodGrid.width):
+    for j in range(foodGrid.height):
+        if (foodGrid.data[i][j] and util.manhattanDistance(position, (i, j)) > maxDist):
+            maxDist = util.manhattanDistance(position, (i, j))
+return maxDist
+```

@@ -405,23 +405,17 @@ def cornersHeuristic(state, problem):
     "*** YOUR CODE HERE ***"
     currentPosition, currentCornersBoolean = state
 
-    estimatedCosts = []
+    maxDist = float('-inf')
 
-    for i in range(4):
-        if (not currentCornersBoolean[i]):
-            estimatedCosts.append(util.manhattanDistance(
-                currentPosition, corners[i]))
+    if currentCornersBoolean == (True, True, True, True):
+        return 0
 
-    avgCost = 0
-    for cost in estimatedCosts:
-        avgCost += cost
+    for i in range(len(currentCornersBoolean)):
+        dist = util.manhattanDistance(currentPosition, corners[i])
+        if (not currentCornersBoolean[i] and dist > maxDist):
+            maxDist = dist
 
-    if (len(estimatedCosts) != 0):
-        avgCost /= len(estimatedCosts)
-
-    heuristicValue = avgCost
-    # Default to trivial solution
-    return heuristicValue
+    return maxDist
 
 
 class AStarCornersAgent(SearchAgent):
@@ -525,7 +519,16 @@ def foodHeuristic(state, problem):
     """
     position, foodGrid = state
     "*** YOUR CODE HERE ***"
-    return foodGrid.count()
+    maxDist = float('-inf')
+    count = foodGrid.count()
+    if count == 0:
+        return 0
+
+    for i in range(foodGrid.width):
+        for j in range(foodGrid.height):
+            if (foodGrid.data[i][j] and util.manhattanDistance(position, (i, j)) > maxDist):
+                maxDist = util.manhattanDistance(position, (i, j))
+    return maxDist
 
 
 class ClosestDotSearchAgent(SearchAgent):
@@ -560,7 +563,10 @@ class ClosestDotSearchAgent(SearchAgent):
         problem = AnyFoodSearchProblem(gameState)
 
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        successor = []
+        actions = []
+
+        return actions
 
 
 class AnyFoodSearchProblem(PositionSearchProblem):
@@ -597,7 +603,7 @@ class AnyFoodSearchProblem(PositionSearchProblem):
         x, y = state
 
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        return self.food.data[x][y]
 
 
 def mazeDistance(point1, point2, gameState):
