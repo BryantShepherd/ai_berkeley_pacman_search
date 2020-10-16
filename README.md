@@ -130,3 +130,5 @@ def getWeightedMinValue(self, gameState, agentIndex, turn):
 ```
 
 ## Câu hỏi 5: Evaluation Function
+
+Thuật toán tương tự với thuật toán trong bài 1.
