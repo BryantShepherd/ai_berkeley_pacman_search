@@ -54,6 +54,10 @@ def getValue(self, gameState, turn):
     return value, action
 
 def getMaxValue(self, gameState, agentIndex, turn):
+    """
+    Trả về hành động đem lại giá trị max và giá trị của successor
+    được sinh ra bởi hành động đó
+    """
     maxValue, maxAction = float('-inf'), None
     for action in gameState.getLegalActions(agentIndex):
         successor = gameState.generateSuccessor(agentIndex, action)
@@ -64,6 +68,10 @@ def getMaxValue(self, gameState, agentIndex, turn):
     return maxValue, maxAction
 
 def getMinValue(self, gameState, agentIndex, turn):
+    """
+    Trả về hành động đem lại giá trị min và giá trị của successor
+    được sinh ra bởi hành động đó
+    """
     minValue, minAction = float('inf'), None
     for action in gameState.getLegalActions(agentIndex):
         successor = gameState.generateSuccessor(agentIndex, action)
@@ -80,7 +88,7 @@ def getAction(self, gameState):
 
 ## Câu hỏi 3: Alpha-Beta Pruning
 
-Thuật toán Alpha-Beta Pruning được cài đặt tương tự như thuật toán Minimax trongtrong câu 2. Điểm khác biệt là trong quá trình đánh giá một state, chương trình sẽ so sánh giá trị đó với alpha và beta để dừng quá trình duyệt cây và return luôn.
+Thuật toán Alpha-Beta Pruning được cài đặt tương tự như thuật toán Minimax trong câu 2. Điểm khác biệt là trong quá trình đánh giá một state, chương trình sẽ so sánh giá trị đó với alpha và beta để dừng quá trình duyệt cây và return luôn.
 
 ```python
 def getMaxValue(self, gameState, agentIndex, turn, alpha, beta):
