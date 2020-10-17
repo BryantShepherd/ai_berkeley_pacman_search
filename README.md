@@ -1,20 +1,22 @@
 # Pacman Search
 
-**Điểm cuối cùng**: 24/25
+**Điểm cuối cùng**: 25/25
 
-**Lưu ý**: Project Pacman Search ban đầu được viết bằng Python 2, tuy nhiên project đã được chuyển về Python 3 để có thể sử dụng cú pháp và chức năng mới nhất do Python cung cấp.
+![final grade](grade.gif)
 
 ```sh
-python3 pacman.py
-python3 autograder.py
+python2 autograder.py
 ```
 
 ## Câu hỏi 1: Reflex Agent
 
 ```python
-# Khoảng cách tới bé ma gần nhất
-minDistanceToGhost = min(util.manhattanDistance(
-    newPos, ghost.getPosition()) for ghost in newGhostStates)
+# Khoảng cách tới bé ma đang không sợ gần nhất
+minDistanceToGhost = float('inf')
+for ghost in newGhostStates:
+    distanceToGhost = util.manhattanDistance(newPos, ghost.getPosition())
+    if (distanceToGhost < minDistanceToGhost and ghost.scaredTimer == 0):
+        minDistanceToGhost = distanceToGhost
 
 # Khoảng cách tới miếng thức ăn gần nhất. Giá trị này được nghịch đảo trong
 # giá trị trả về để khuyến khích pacman đi tới miếng thức ăn gần nhất.
@@ -89,6 +91,7 @@ def getMaxValue(self, gameState, agentIndex, turn, alpha, beta):
         if (value > maxValue):
             maxValue = value
             maxAction = action
+        # thực hiện pruning
         if value > beta:
             return value, action
         alpha = max(value, alpha)
@@ -102,6 +105,7 @@ def getMinValue(self, gameState, agentIndex, turn, alpha, beta):
         if (value < minValue):
             minValue = value
             minAction = action
+        # thực hiện pruning
         if value < alpha:
             return value, action
         beta = min(value, beta)

@@ -74,8 +74,11 @@ class ReflexAgent(Agent):
         newScaredTimes = [ghostState.scaredTimer for ghostState in newGhostStates]
 
         "*** YOUR CODE HERE ***"
-        minDistanceToGhost = min(util.manhattanDistance(
-            newPos, ghost.getPosition()) for ghost in newGhostStates)
+        minDistanceToGhost = float('inf')
+        for ghost in newGhostStates:
+            distanceToGhost = util.manhattanDistance(newPos, ghost.getPosition())
+            if (distanceToGhost < minDistanceToGhost and ghost.scaredTimer == 0):
+                minDistanceToGhost = distanceToGhost
 
         closestFood = float('inf')
         for foodPos in newFood.asList():
@@ -291,16 +294,21 @@ def betterEvaluationFunction(currentGameState):
     newScaredTimes = [ghostState.scaredTimer for ghostState in newGhostStates]
 
     "*** YOUR CODE HERE ***"
-    minDistanceToGhost = min(util.manhattanDistance(
-        newPos, ghost.getPosition()) for ghost in newGhostStates)
+    # minDistanceToGhost = min(util.manhattanDistance(
+    #     newPos, ghost.getPosition()) for ghost in newGhostStates)
+    minDistanceToGhost = float('inf')
+    for ghost in newGhostStates:
+        distanceToGhost = util.manhattanDistance(newPos, ghost.getPosition())
+        if (distanceToGhost < minDistanceToGhost and ghost.scaredTimer == 0):
+            minDistanceToGhost = distanceToGhost
 
     closestFood = float('inf')
     for foodPos in newFood.asList():
         if (util.manhattanDistance(newPos, foodPos) < closestFood):
             closestFood = util.manhattanDistance(newPos, foodPos)
 
-    if (minDistanceToGhost >= 5):
-        minDistanceToGhost = 5
+    if (minDistanceToGhost >= 6):
+        minDistanceToGhost = 6
 
     return minDistanceToGhost + currentGameState.getScore() + 1.0 / closestFood
 
