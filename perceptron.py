@@ -50,12 +50,16 @@ class PerceptronClassifier:
         self.features = trainingData[0].keys() # could be useful later
         # DO NOT ZERO OUT YOUR WEIGHTS BEFORE STARTING TRAINING, OR
         # THE AUTOGRADER WILL LIKELY DEDUCT POINTS.
-
+        
         for iteration in range(self.max_iterations):
             print "Starting iteration ", iteration, "..."
             for i in range(len(trainingData)):
-                "*** YOUR CODE HERE ***"
-                util.raiseNotDefined()
+                data = trainingData[i]
+                actual = trainingLabels[i] # actual label of {data}
+                prediction = self.classify([data])[0] # predicted label of {data}
+                if (actual != prediction):
+                    self.weights[actual] = self.weights[actual] + data
+                    self.weights[prediction] = self.weights[prediction] - data
 
     def classify(self, data ):
         """
@@ -68,7 +72,9 @@ class PerceptronClassifier:
         for datum in data:
             vectors = util.Counter()
             for l in self.legalLabels:
+                # calculate the dot product of the weight vectors and data point
                 vectors[l] = self.weights[l] * datum
+            # why are they getting the maximum of those vectors?
             guesses.append(vectors.argMax())
         return guesses
 
