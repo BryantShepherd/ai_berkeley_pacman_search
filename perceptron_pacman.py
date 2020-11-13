@@ -56,7 +56,5 @@ class PerceptronClassifierPacman(PerceptronClassifier):
                 prediction = self.classify([data])[0]
                 actual = trainingLabels[i]
 
-                print(self.weights)
-
                 if (actual != prediction):
                     self.weights = self.weights + data[0][actual] - data[0][prediction]

@@ -69,16 +69,20 @@ def enhancedFeatureExtractorDigit(datum):
     Your feature extraction playground.
 
     You should return a util.Counter() of features
-    for this datum (datum is of type samples.Datum).
-
+    for this datum (datum is of type samples.Datum).e
+e
     ## DESCRIBE YOUR ENHANCED FEATURES HERE...
 
     ##
     """
-    features =  basicFeatureExtractorDigit(datum)
+    features = util.Counter()
 
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    for x in range(DIGIT_DATUM_WIDTH):
+        for y in range(DIGIT_DATUM_HEIGHT):
+            if datum.getPixel(x, y) > 0:
+                features[(x,y)] = 1
+            else:
+                features[(x,y)] = 0
 
     return features
 
