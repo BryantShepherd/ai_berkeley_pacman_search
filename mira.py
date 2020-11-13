@@ -60,8 +60,27 @@ class MiraClassifier:
         datum is a counter from features to values for those features
         representing a vector of values.
         """
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        for _ in range(self.max_iterations):
+            for c in Cgrid:
+                for i, data in enumerate(trainingData):
+                    actual = trainingLabels[i]
+                    prediction = self.classify([data])[0]
+
+                    if (actual != prediction):
+                        r = ((self.weights[prediction] - self.weights[actual]) * data + 1 ) * 1.0 / (data * data * 2)
+                        r = min(c, r)
+
+                        # compromise for the fact that there is no multiplyAll()
+                        # method exist on Counter.
+                        f = None
+                        if (r == 0):
+                            f = data - data
+                        else:
+                            f = data.copy()
+                            f.divideAll(1.0 / r)
+                        
+                        self.weights[actual] = self.weights[actual] + f
+                        self.weights[prediction] = self.weights[prediction] - f
 
     def classify(self, data ):
         """

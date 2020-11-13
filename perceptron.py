@@ -58,6 +58,7 @@ class PerceptronClassifier:
                 actual = trainingLabels[i] # actual label of {data}
                 prediction = self.classify([data])[0] # predicted label of {data}
                 if (actual != prediction):
+                    # update the WEIGHT VECTOR of actual label
                     self.weights[actual] = self.weights[actual] + data
                     self.weights[prediction] = self.weights[prediction] - data
 
@@ -85,7 +86,13 @@ class PerceptronClassifier:
         """
         featuresWeights = []
 
+        featuresPQ = util.PriorityQueue()
+
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        for i in self.weights[label]:
+            featuresPQ.push(i, -self.weights[label][i])
+        
+        for i in range(100):
+            featuresWeights.append(featuresPQ.pop())
 
         return featuresWeights
