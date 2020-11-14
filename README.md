@@ -53,15 +53,18 @@ def findHighWeightFeatures(self, label):
 ```py
 def trainAndTune(self, trainingData, trainingLabels, validationData, validationLabels, Cgrid):
 
-    ### YOUR CODE HERE ###
-    for _ in range(self.max_iterations):
-        for c in Cgrid:
+    # Tìm các weight vector sau khi được huấn luyện bởi c
+    potentialWeights = {}
+    for c in Cgrid:
+        # Tạo weight vector tạm thời
+        tempWeight = self.weights.copy()
+        for _ in range(self.max_iterations):
             for i, data in enumerate(trainingData):
                 actual = trainingLabels[i]
-                prediction = self.classify([data])[0]
+                prediction = self.classifyWeight([data], tempWeight)[0]
 
                 if (actual != prediction):
-                    r = ((self.weights[prediction] - self.weights[actual]) * data + 1 ) * 1.0 / (data * data * 2)
+                    r = ((tempWeight[prediction] - tempWeight[actual]) * data + 1.0 ) / (data * data * 2)
                     r = min(c, r)
 
                     # compromise for the fact that there is no multiplyAll()
@@ -73,8 +76,41 @@ def trainAndTune(self, trainingData, trainingLabels, validationData, validationL
                         f = data.copy()
                         f.divideAll(1.0 / r)
 
-                    self.weights[actual] = self.weights[actual] + f
-                    self.weights[prediction] = self.weights[prediction] - f
+                    tempWeight[actual] = tempWeight[actual] + f
+                    tempWeight[prediction] = tempWeight[prediction] - f
+        potentialWeights[c] = tempWeight
+
+    # Đánh giá c bằng cách kiểm tra với validationData
+    maxScore = float("-inf")
+    maxAccuracyC = float("inf")
+
+    for c in Cgrid:
+        score = 0
+        for i, data in enumerate(validationData):
+            actual = validationLabels[i]
+            prediction = self.classifyWeight([data], potentialWeights[c])[0]
+            if (actual == prediction): score += 1
+
+        if (score >= maxScore):
+            # Nếu hai kết quả bằng nhau, lấy giá trị c nhỏ nhất
+            maxAccuracyC = min(c, maxAccuracyC) if score == maxScore else c
+            maxScore = score
+
+    self.weights = potentialWeights[maxAccuracyC]
+    self.weights["c"] = maxAccuracyC
+
+def classifyWeight(self, data, weights):
+    """
+    Chức năng tương tự như self.classify, chỉ khác là sử dụng
+    weight vector riêng.
+    """
+    guesses = []
+    for datum in data:
+        vectors = util.Counter()
+        for l in self.legalLabels:
+            vectors[l] = weights[l] * datum
+        guesses.append(vectors.argMax())
+    return guesses
 ```
 
 ## Câu 4: Digit Feature Design
@@ -130,6 +166,8 @@ def enhancedFeatureExtractorDigit(datum):
                 # tăng biến đếm lên 1.
                 number_of_regions += 1
 
+    # Do các số có tối đa số vùng trắng là 3,
+    # đặt features[số vùng] là 1, còn lại là 0.
     features[1] = 0
     features[2] = 0
     features[3] = 0

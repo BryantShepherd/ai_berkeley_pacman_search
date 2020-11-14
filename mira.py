@@ -59,15 +59,18 @@ class MiraClassifier:
         the classify method works correctly. Also, recall that a
         datum is a counter from features to values for those features
         representing a vector of values.
-        """
-        for _ in range(self.max_iterations):
-            for c in Cgrid:
+        """            
+
+        potentialWeights = {}
+        for c in Cgrid:
+            tempWeight = self.weights.copy()
+            for _ in range(self.max_iterations):
                 for i, data in enumerate(trainingData):
                     actual = trainingLabels[i]
-                    prediction = self.classify([data])[0]
+                    prediction = self.classifyWeight([data], tempWeight)[0]
 
                     if (actual != prediction):
-                        r = ((self.weights[prediction] - self.weights[actual]) * data + 1 ) * 1.0 / (data * data * 2)
+                        r = ((tempWeight[prediction] - tempWeight[actual]) * data + 1.0 ) / (data * data * 2)
                         r = min(c, r)
 
                         # compromise for the fact that there is no multiplyAll()
@@ -79,8 +82,35 @@ class MiraClassifier:
                             f = data.copy()
                             f.divideAll(1.0 / r)
                         
-                        self.weights[actual] = self.weights[actual] + f
-                        self.weights[prediction] = self.weights[prediction] - f
+                        tempWeight[actual] = tempWeight[actual] + f
+                        tempWeight[prediction] = tempWeight[prediction] - f
+            potentialWeights[c] = tempWeight
+
+        maxScore = float('-inf')
+        maxAccuracyC = float("inf")
+
+        for c in Cgrid:
+            score = 0
+            for i, data in enumerate(validationData):
+                actual = validationLabels[i]
+                prediction = self.classifyWeight([data], potentialWeights[c])[0]
+                if (actual == prediction): score += 1
+
+            if (score >= maxScore):
+                maxAccuracyC = min(c, maxAccuracyC) if score == maxScore else c
+                maxScore = score
+
+        self.weights = potentialWeights[maxAccuracyC]
+        self.weights["c"] = maxAccuracyC
+
+    def classifyWeight(self, data, weights):
+        guesses = []
+        for datum in data:
+            vectors = util.Counter()
+            for l in self.legalLabels:
+                vectors[l] = weights[l] * datum
+            guesses.append(vectors.argMax())
+        return guesses
 
     def classify(self, data ):
         """

@@ -154,8 +154,9 @@ def enhancedPacmanFeatures(state, action):
     It should return a counter with { <feature name> : <feature value>, ... }
     """
     features = util.Counter()
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    pacmanPos = state.getPacmanPosition()
+    distanceToClosestGhost = min(util.manhattanDistance(pacmanPos, ghostPos) for ghostPos in state.getGhostPositions())
+    features["closest_ghost"] = distanceToClosestGhost
     return features
 
 
