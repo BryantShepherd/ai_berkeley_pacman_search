@@ -1,6 +1,8 @@
-# Pacman Search
+# Week 5 - Classification
 
-**Điểm cuối cùng**:
+**Điểm cuối cùng**: 21/25 ([demo](https://drive.google.com/drive/folders/1BRJi0Ny_5gtQWpAHH3RmvLJTeJLfhrv7?usp=sharing))
+
+![final](https://imgur.com/download/Bjzq6tZ/)
 
 ```sh
 python2 autograder.py
