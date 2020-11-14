@@ -64,6 +64,27 @@ def basicFeatureExtractorFace(datum):
                 features[(x,y)] = 0
     return features
 
+def flooding(datum, x, y, marked):
+    """
+    Keep expanding marked region by recursively
+    call this function. Stop when all adjacent
+    white pixels have been marked.
+    """
+    marked[x][y] = 1
+    adjacentPixels = []
+    
+    # Check if the current pixel is on the edge
+    if (x != 0): adjacentPixels.append((x - 1, y))
+    if (x != DIGIT_DATUM_WIDTH - 1): adjacentPixels.append((x + 1, y))
+    if (y != 0): adjacentPixels.append((x, y - 1))
+    if (y != DIGIT_DATUM_HEIGHT - 1): adjacentPixels.append((x, y + 1))
+
+    for px, py in adjacentPixels:
+        if (datum.getPixel(px, py) == 0 and marked[px][py] == 0):
+            marked = flooding(datum, px, py, marked)
+
+    return marked
+
 def enhancedFeatureExtractorDigit(datum):
     """
     Your feature extraction playground.
@@ -72,18 +93,24 @@ def enhancedFeatureExtractorDigit(datum):
     for this datum (datum is of type samples.Datum).e
 e
     ## DESCRIBE YOUR ENHANCED FEATURES HERE...
-
+    Use a flooding algorithm to find the number of regions.
     ##
     """
-    features = util.Counter()
+    features = basicFeatureExtractorDigit(datum)
+    marked = [[0 for j in range(DIGIT_DATUM_HEIGHT)] for i in range(DIGIT_DATUM_WIDTH)]
+    # Number of white-pixel-only regions.
+    number_of_regions = 0
 
     for x in range(DIGIT_DATUM_WIDTH):
         for y in range(DIGIT_DATUM_HEIGHT):
-            if datum.getPixel(x, y) > 0:
-                features[(x,y)] = 1
-            else:
-                features[(x,y)] = 0
+            if (marked[x][y] == 0 and datum.getPixel(x, y) == 0):
+                marked = flooding(datum, x, y, marked)
+                number_of_regions += 1
 
+    features[1] = 0
+    features[2] = 0
+    features[3] = 0
+    features[number_of_regions] = 1
     return features
 
 
