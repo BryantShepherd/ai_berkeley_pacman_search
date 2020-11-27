@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # bustersAgents.py
 # ----------------
 # Licensing Information:  You are free to use or extend these projects for
@@ -162,5 +163,25 @@ class GreedyBustersAgent(BustersAgent):
         livingGhostPositionDistributions = \
             [beliefs for i, beliefs in enumerate(self.ghostBeliefs)
              if livingGhosts[i+1]]
+        
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        closestGhostPos = livingGhostPositionDistributions[0].argMax()
+        distanceToCGP = self.distancer.getDistance(pacmanPosition, closestGhostPos)
+
+        for l in livingGhostPositionDistributions:
+            highestProbPos = l.argMax()
+            distanceToHPP = self.distancer.getDistance(pacmanPosition, highestProbPos)
+            distanceToCGP = self.distancer.getDistance(pacmanPosition, closestGhostPos)
+            if (distanceToHPP < distanceToCGP):
+                closestGhostPos = highestProbPos
+
+        bestAction = legal[0]
+        bestDistance = float('inf')
+        for action in legal:
+            successorPosition = Actions.getSuccessor(pacmanPosition, action)
+            distanceToClosestGhost = self.distancer.getDistance(successorPosition, closestGhostPos)
+            if (distanceToClosestGhost < bestDistance):
+                bestDistance = distanceToClosestGhost
+                bestAction = action
+        return bestAction
+
