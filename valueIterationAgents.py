@@ -12,6 +12,7 @@
 # Pieter Abbeel (pabbeel@cs.berkeley.edu).
 
 
+from game import Actions
 import mdp, util
 
 from learningAgents import ValueEstimationAgent
@@ -45,7 +46,17 @@ class ValueIterationAgent(ValueEstimationAgent):
 
         # Write value iteration code here
         "*** YOUR CODE HERE ***"
-
+        nextValues = util.Counter()
+        for i in range(iterations):
+            nextValues = util.Counter()
+            for state in mdp.getStates()[1:]:
+                maxValue = float('-inf')
+                for action in mdp.getPossibleActions(state):
+                    val = self.computeQValueFromValues(state, action)
+                    if (val > maxValue):
+                        maxValue = val
+                nextValues[state] = maxValue
+            self.values = nextValues
 
     def getValue(self, state):
         """
@@ -60,7 +71,10 @@ class ValueIterationAgent(ValueEstimationAgent):
           value function stored in self.values.
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        val = 0
+        for nextState, prob in self.mdp.getTransitionStatesAndProbs(state, action):
+            val += prob * (self.mdp.getReward(state, action, nextState) + self.discount * self.values[nextState])
+        return val
 
     def computeActionFromValues(self, state):
         """
@@ -72,7 +86,16 @@ class ValueIterationAgent(ValueEstimationAgent):
           terminal state, you should return None.
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        actions = self.mdp.getPossibleActions(state)
+
+        maxVal = float('-inf')
+        maxAction = None
+        for action in actions:
+            val = self.computeQValueFromValues(state, action)
+            if val > maxVal:
+                maxAction = action
+                maxVal = val
+        return maxAction
 
     def getPolicy(self, state):
         return self.computeActionFromValues(state)
