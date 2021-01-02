@@ -63,7 +63,7 @@ class QLearningAgent(ReinforcementAgent):
           terminal state, you should return a value of 0.0.
         """
         "*** YOUR CODE HERE ***"
-        maxValue = max([self.qValues[(state, a)] for a in self.getLegalActions(state)] or [0])
+        maxValue = max([self.getQValue(state, a) for a in self.getLegalActions(state)] or [0])
 
         return maxValue
 
@@ -77,7 +77,7 @@ class QLearningAgent(ReinforcementAgent):
         maxValue = float('-inf')
         maxAction = None
         for a in self.getLegalActions(state):
-          qValue = self.qValues[(state, a)]
+          qValue = self.getQValue(state, a)
           if (qValue > maxValue):
             maxValue = qValue
             maxAction = a
@@ -119,10 +119,10 @@ class QLearningAgent(ReinforcementAgent):
         """
         "*** YOUR CODE HERE ***"
         # get max q value of nextState, if no legal actions found, return 0
-        maxQValue = max([self.qValues[(nextState, a)] for a in self.getLegalActions(nextState)] or [0])
+        maxQValue = max([self.getQValue(nextState, a) for a in self.getLegalActions(nextState)] or [0])
 
         result = reward + self.discount * maxQValue
-        self.qValues[(state, action)] = (1 - self.alpha) * self.qValues[(state, action)] + self.alpha * result
+        self.qValues[(state, action)] = (1 - self.alpha) * self.getQValue(state, action) + self.alpha * result
 
     def getPolicy(self, state):
         return self.computeActionFromQValues(state)
@@ -185,14 +185,20 @@ class ApproximateQAgent(PacmanQAgent):
           where * is the dotProduct operator
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        return self.weights * self.featExtractor.getFeatures(state, action)
 
     def update(self, state, action, nextState, reward):
         """
            Should update your weights based on transition
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        maxQValueNextState = max([self.getQValue(nextState, a) for a in self.getLegalActions(nextState)] or [0])
+        difference = ( reward + self.discount * maxQValueNextState ) - self.getQValue(state, action)
+
+        features = self.featExtractor.getFeatures(state, action).copy()
+        if (self.alpha * difference != 0): features.divideAll(1 / (self.alpha * difference))
+        else: features = util.Counter()
+        self.weights = self.weights + features
 
     def final(self, state):
         "Called at the end of each game."
