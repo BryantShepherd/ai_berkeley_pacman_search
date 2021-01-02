@@ -46,10 +46,9 @@ class ValueIterationAgent(ValueEstimationAgent):
 
         # Write value iteration code here
         "*** YOUR CODE HERE ***"
-        nextValues = util.Counter()
         for i in range(iterations):
             nextValues = util.Counter()
-            for state in mdp.getStates()[1:]:
+            for state in mdp.getStates()[1:]: # ignore TERMINAL state
                 maxValue = float('-inf')
                 for action in mdp.getPossibleActions(state):
                     val = self.computeQValueFromValues(state, action)
@@ -73,6 +72,7 @@ class ValueIterationAgent(ValueEstimationAgent):
         "*** YOUR CODE HERE ***"
         val = 0
         for nextState, prob in self.mdp.getTransitionStatesAndProbs(state, action):
+            # QValue Formula
             val += prob * (self.mdp.getReward(state, action, nextState) + self.discount * self.values[nextState])
         return val
 
