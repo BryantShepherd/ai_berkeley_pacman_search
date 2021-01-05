@@ -154,9 +154,18 @@ def enhancedPacmanFeatures(state, action):
     It should return a counter with { <feature name> : <feature value>, ... }
     """
     features = util.Counter()
-    pacmanPos = state.getPacmanPosition()
-    distanceToClosestGhost = min(util.manhattanDistance(pacmanPos, ghostPos) for ghostPos in state.getGhostPositions())
-    features["closest_ghost"] = distanceToClosestGhost
+    successor = state.generatePacmanSuccessor(action)
+    pacmanPos = successor.getPacmanPosition()
+
+    def minManhattanDistance(positions):
+        return min(util.manhattanDistance(pacmanPos, p) for p in positions)
+
+    closestGhost = minManhattanDistance(successor.getGhostPositions())
+    closestFood = minManhattanDistance(state.getFood().asList())
+    
+    features["closest_ghost"] = closestGhost
+    features["closest_food"] = closestFood
+    features["score"] = successor.getScore()
     return features
 
 
