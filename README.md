@@ -1,6 +1,8 @@
 # Week 3 - Reinforcement Learning
 
-** Điểm cuối cùng **: 25/25
+**Điểm cuối cùng**: 25/25
+
+![autograder](./autograder.png)
 
 ## Câu 1: Value Iteration
 
